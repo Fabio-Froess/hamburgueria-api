@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Pao {
+  id      Int       @id @default(autoincrement())
+  tipo    String
+  burgers Burgers[]
+
+  @@map("pao")
+}
+
+model Carne {
+  id      Int       @id @default(autoincrement())
+  tipo    String
+  burgers Burgers[]
+
+  @@map("carne")
+}
+
+model Opcional {
+  id                Int                 @id @default(autoincrement())
+  tipo              String
+  Opcionais_Burgers Opcionais_Burgers[]
+
+  @@map("opcional")
+}
+
+model Status {
+  id      Int       @id @default(autoincrement())
+  tipo    String
+  burgers Burgers[]
+
+  @@map("status")
+}
+
+model Burgers {
+  id                Int                 @id @default(autoincrement())
+  nome              String
+  carne             Carne               @relation(fields: [carneId], references: [id])
+  carneId           Int
+  pao               Pao                 @relation(fields: [paoId], references: [id])
+  paoId             Int
+  status            Status              @relation(fields: [statusId], references: [id])
+  statusId          Int
+  opcionais_burgers Opcionais_Burgers[]
+
+  @@map("burgers")
+}
+
+model Opcionais_Burgers {
+  id         Int      @id @default(autoincrement())
+  burger     Burgers  @relation(fields: [burgerId], references: [id])
+  burgerId   Int
+  opcional   Opcional @relation(fields: [opcionalId], references: [id])
+  opcionalId Int
+
+  @@map("opcionais_burgers")
+}
